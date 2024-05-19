@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/Student-identity-management.git/static/css/main.d099f8f1.css",
+    "main.js": "/Student-identity-management.git/static/js/main.d99d8d0e.js",
+    "static/js/453.ce8592c0.chunk.js": "/Student-identity-management.git/static/js/453.ce8592c0.chunk.js",
+    "static/media/unilorin_logo2.png": "/Student-identity-management.git/static/media/unilorin_logo2.fa0ab75035c4a6b39e3f.png",
+    "index.html": "/Student-identity-management.git/index.html",
+    "main.d099f8f1.css.map": "/Student-identity-management.git/static/css/main.d099f8f1.css.map",
+    "main.d99d8d0e.js.map": "/Student-identity-management.git/static/js/main.d99d8d0e.js.map",
+    "453.ce8592c0.chunk.js.map": "/Student-identity-management.git/static/js/453.ce8592c0.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d099f8f1.css",
+    "static/js/main.d99d8d0e.js"
+  ]
+}

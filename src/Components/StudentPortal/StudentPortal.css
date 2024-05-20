@@ -29,7 +29,7 @@ html {
     @apply m-auto bg-transparent h-12 w-96 border-none outline-none text-xl text-[#797979];
   }
   .submit {
-    @apply flex justify-center items-center text-[#fff] w-56 h-14 bg-[#000080] rounded-3xl font-bold text-xl cursor-pointer mb-20;
+    @apply flex justify-center items-center text-[#fff] w-56 h-14 bg-[#000080] rounded-3xl font-bold text-xl cursor-pointer;
   }
 
   label {
@@ -39,7 +39,10 @@ html {
 .gray {
   @apply bg-[#EAEAEA] text-[#676767];
 }
-.form_image {
+/* .form_image {
   @apply w-full max-w-[1013px] h-auto sm:w-[80%] md:w-[60%] lg:w-[50%] xl:w-[40%] flex  justify-center items-center;
+} */
+.error {
+  @apply text-red-500  absolute -bottom-8 font-bold;
 }
 /* Ends here */

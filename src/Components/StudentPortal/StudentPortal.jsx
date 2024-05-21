@@ -1,6 +1,7 @@
 import React from "react";
 import { useRef, useState } from "react";
 import "./StudentPortal.css";
+// import "./index.css";
 import resemble from "resemblejs";
 import logo from "../Assets/unilorin_logo2.png";
 import photo from "../Assets/photo.png";

@@ -18,7 +18,7 @@ html {
   }
 
   .input {
-    @apply flex items-center m-auto w-25 h-20 bg-[#eaeaea] rounded-md my-6;
+    @apply flex items-center m-auto w-25  bg-[#eaeaea] rounded-md my-6;
   }
 
   select {

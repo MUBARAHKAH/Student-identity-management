@@ -7,7 +7,11 @@ module.exports = {
         2.25: "9px", // Define custom spacing key '2.25' as '9px'
       },
       screens: {
-        xs: "430px",
+        xs: "320px",
+        sm: "480px", // Custom width for small screens
+        md: "768px", // Custom width for medium screens
+        lg: "1024px", // Custom width for large screens
+        xl: "1200px", // Custom width for extra-large screens
       },
       width: {
         15: "61px",
@@ -26,15 +30,14 @@ module.exports = {
     },
   },
   plugins: [
-    function ({ addUtilities }) {
-      const newUtilities = {
-        ".custom-mobile-style": {
-          backgroundColor: "#ffcc00",
-          color: "#333",
-        },
-      };
-
-      addUtilities(newUtilities, ["responsive", "hover"]);
-    },
+    // function ({ addUtilities }) {
+    //   const newUtilities = {
+    //     ".custom-mobile-style": {
+    //       backgroundColor: "#ffcc00",
+    //       color: "#333",
+    //     },
+    //   };
+    //   addUtilities(newUtilities, ["responsive", "hover"]);
+    // },
   ],
 };

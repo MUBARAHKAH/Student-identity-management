@@ -1,13 +1,14 @@
 import React from "react";
 import { useRef, useState } from "react";
+import axios from "axios";
 import "./StudentPortal.css";
 // import "./index.css";
-import resemble from "resemblejs";
+import Resemble from "resemblejs";
 import logo from "../Assets/unilorin_logo2.png";
 import photo from "../Assets/photo.png";
 
 function StudentPortal() {
-  //form validation
+  //form input data
   const [formData, setFormData] = useState({
     fullName: "",
     matricNumber: "",
@@ -19,24 +20,26 @@ function StudentPortal() {
     level: "",
     photo: null,
   });
+  const [file, setFile] = useState(null);
   const [errors, setErrors] = useState({});
+  const [progress, setProgress] = useState({ started: false, pc: 0 });
+  const [msg, setMsg] = useState(null);
   const inputRef = useRef(null);
   const [image, setImage] = useState();
   const handleImageClick = () => {
     inputRef.current.click();
   };
+
   const handleImageChange = (event) => {
     const file = event.target.files[0];
-    // setImage(file);
-    setFormData({ ...formData, photo: file });
     if (file) {
+      setFormData({ ...formData, photo: file });
       setErrors((prevErrors) => ({ ...prevErrors, photo: null }));
     }
     const reader = new FileReader();
     reader.onload = (e) => {
       const img = new Image();
       img.onload = () => {
-        // Validate image dimensions (e.g., 300x300 pixels)
         const requiredWidth = 225;
         const requiredHeight = 225;
         if (img.width !== requiredWidth || img.height !== requiredHeight) {
@@ -46,17 +49,89 @@ function StudentPortal() {
           }));
           return;
         }
-        // Proceed if the image passes all validations
         setImage(file);
         setFormData({ ...formData, photo: file });
 
-        // Clear the photo error if a valid file is selected
-        setErrors((prevErrors) => ({ ...prevErrors, photo: null }));
+        //checking if image uploaded has a red background
+        // Draw the uploaded image on a canvas
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imageData.data;
+
+        let redCount = 0;
+        let totalCount = data.length / 4; // each pixel has 4 values (r, g, b, a)
+
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+
+          // Check if the pixel is predominantly red
+          if (r > 200 && g < 50 && b < 50) {
+            redCount++;
+          }
+        }
+
+        const redPercentage = (redCount / totalCount) * 100;
+        console.log("Red Percentage:", redPercentage);
+
+        const threshold = 70; // Define the threshold percentage for a red background
+        if (redPercentage > threshold) {
+          console.log("The image has a red background.");
+          setImage(file);
+          setFormData({ ...formData, photo: file });
+          setErrors((prevErrors) => ({ ...prevErrors, photo: null })); // Clear the error if valid
+        } else {
+          console.log("The image does not have a red background.");
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            photo: "The image does not have a red background.",
+          }));
+        }
       };
       img.src = e.target.result;
     };
     reader.readAsDataURL(file);
   };
+
+  //Responsive upload button
+  function handleUpload() {
+    if (!file) {
+      setMsg("No file selected");
+      return;
+    }
+    const fd = new FormData();
+    fd.append("file", file);
+
+    setMsg("Uploading...");
+    setProgress((prevState) => {
+      return { ...prevState, started: true };
+    });
+    axios
+      .post("http://httpbin.org/post", fd, {
+        onUploadedProgress: (progressEvent) => {
+          setProgress((prevState) => {
+            return { ...prevState, pc: progressEvent.progress * 100 };
+          });
+        },
+        headers: {
+          "Custom-Header": "value",
+        },
+      })
+      .then((res) => {
+        setMsg("Upload successful");
+        console.log(res.data);
+      })
+      .catch((err) => {
+        setMsg("Upload failed");
+        console.log(err);
+      });
+  }
 
   //validation function
   const handleChange = (e) => {
@@ -105,7 +180,7 @@ function StudentPortal() {
     <div className="container">
       <div className="header flex flex-col items-center gap-2.25 mt-7.5">
         <img src={logo} className="logo sw-56 h-56" alt="" />
-        <div className="text text-[#000080] text-5xl font-bold mb-8 my-6">
+        <div className="text text-[#000080] text-center sm:text-left text-base sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-8 my-6">
           Registration Form
         </div>
       </div>
@@ -120,12 +195,16 @@ function StudentPortal() {
 
         <div
           onClick={handleImageClick}
-          className="flex flex-col justify-center items-center w-64 h-64"
+          className="flex flex-col justify-center items-center"
         >
           {image ? (
             <img src={URL.createObjectURL(image)} alt="" className="" />
           ) : (
-            <img src={photo} alt="upload" className="form_image" />
+            <img
+              src={photo}
+              alt="upload"
+              className="form_image w-auto lg:w-[500px] lg:h-[500px]"
+            />
           )}
           <input
             type="file"
@@ -134,12 +213,23 @@ function StudentPortal() {
             style={{ display: "none" }}
           />
         </div>
-        <button className=" submit image_upload-button">Upload</button>
-        {errors.photo && <p className="error">{errors.photo}</p>}
+        <button className="submit" onClick={handleUpload}>
+          Upload
+        </button>
+        {progress.started && (
+          <progress max="100" value={progress.pc}></progress>
+        )}
+        {msg && <span>{msg}</span>}
+        {errors.photo && (
+          <p className="error lg:right-0 sm:right-0">{errors.photo}</p>
+        )}
       </div>
       <div className="inputs grid  sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4 my-8">
         {/*div for the firstname and lasname*/}
         <div className="input relative">
+          <label htmlFor="fullName" className="">
+            Full name
+          </label>
           <input
             type="text"
             name="fullName"
@@ -148,14 +238,12 @@ function StudentPortal() {
             placeholder="Full name"
             className="peer text-gray-900 font-semibold text-xl md:text-2xl"
           />
-          <label htmlFor="fullName" className="">
-            Full name
-          </label>
           {errors.fullName && <p className="error">{errors.fullName}</p>}
         </div>
 
         <div className="input relative">
           <img src="{}" alt="" />
+          <label htmlFor="matric">Matric Number</label>
           <input
             type="text"
             name="matricNumber"
@@ -163,7 +251,7 @@ function StudentPortal() {
             onChange={handleChange}
             placeholder="Matric number"
           />
-          <label htmlFor="matric">Matric Number</label>
+
           {errors.matricNumber && (
             <p className="error">{errors.matricNumber}</p>
           )}
@@ -172,6 +260,7 @@ function StudentPortal() {
 
         <div className="input relative">
           <img src="" alt="" />
+          <label htmlFor="department">Department</label>
           <input
             type="text"
             name="department"
@@ -179,12 +268,12 @@ function StudentPortal() {
             onChange={handleChange}
             placeholder="Department"
           />
-          <label htmlFor="department">Department</label>
           {errors.department && <p className="error">{errors.department}</p>}
         </div>
         {/*div for faculty*/}
         <div className="input relative">
           <img src="" alt="" />
+          <label htmlFor="faculty">Faculty</label>
           <input
             type="text"
             name="faculty"
@@ -192,13 +281,14 @@ function StudentPortal() {
             onChange={handleChange}
             placeholder="Faculty"
           />
-          <label htmlFor="faculty">Faculty</label>
+
           {errors.faculty && <p className="error">{errors.faculty}</p>}
         </div>
 
         {/*div for email*/}
         <div className="input relative">
           <img src="" alt="" />
+          <label htmlFor="fullName">Email</label>
           <input
             type="email"
             name="email"
@@ -206,13 +296,14 @@ function StudentPortal() {
             onChange={handleChange}
             placeholder="Email_id"
           />
-          <label htmlFor="fullName">Email</label>
+
           {errors.email && <p className="error">{errors.email}</p>}
         </div>
 
         {/*div for password*/}
         <div className="input relative">
           <img src="" alt="" />
+          <label htmlFor="fullName">Password</label>
           <input
             type="password"
             name="password"
@@ -220,13 +311,17 @@ function StudentPortal() {
             onChange={handleChange}
             placeholder="Password"
           />
-          <label htmlFor="fullName">Password</label>
+
           {errors.password && <p className="error">{errors.password}</p>}
         </div>
 
-        <div className="input relative">
+        <div className="input">
+          <label htmlFor="gender" className=" label-select">
+            Gender
+          </label>
+
           <select
-            className=".form-select"
+            className="form-select"
             aria-label="Select gender"
             name="gender"
             value={formData.gender}
@@ -236,15 +331,14 @@ function StudentPortal() {
             <option value="male">Male</option>
             <option value="female">Female</option>
           </select>
-          <label htmlFor="gender" className=" label-select">
-            Gender
-          </label>
           {errors.gender && <p className="error">{errors.gender}</p>}
         </div>
-
-        <div className="input relative">
+        <div className="input ">
+          <label htmlFor="level" className=" label-level">
+            Level
+          </label>
           <select
-            className=".form-select"
+            className="form-select"
             aria-label="Select gender"
             name="level"
             value={formData.level}
@@ -255,19 +349,18 @@ function StudentPortal() {
             <option value="200">200</option>
             <option value="300">300</option>
           </select>
-          <label htmlFor="level" className=" label-level">
-            Level
-          </label>
+
           {errors.level && <p className="error">{errors.level}</p>}
         </div>
       </div>
+
       <div className="forgot-password pl-4 md:pl-16  text-[#000080] text-xl md:text-2xl pb-24">
         forgot password?{" "}
         <span className="click-here text-[#000080] cursor-pointer">
           Click here
         </span>
       </div>
-      <div className="submit-container flex flex-col sm:flex-row gap-8 my-15 mx-auto">
+      <div className="flex flex-col-2 justify-center gap-8 lg:mb-20">
         <div className="submit" onClick={handleSubmit}>
           {" "}
           Register

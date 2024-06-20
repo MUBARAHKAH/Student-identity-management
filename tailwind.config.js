@@ -6,6 +6,7 @@ module.exports = {
       spacing: {
         2.25: "9px", // Define custom spacing key '2.25' as '9px'
       },
+
       screens: {
         xs: "320px",
         sm: "480px", // Custom width for small screens

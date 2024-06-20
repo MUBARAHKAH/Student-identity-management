@@ -1,14 +1,158 @@
-import React from "react";
-import { useRef, useState } from "react";
-import axios from "axios";
+import React, { useRef, useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+//import axios from "axios";
 import "./StudentPortal.css";
-// import "./index.css";
-import Resemble from "resemblejs";
+//import Resemble from "resemblejs";
 import logo from "../Assets/unilorin_logo2.png";
 import photo from "../Assets/photo.png";
 
 function StudentPortal() {
-  //form input data
+  const universityData = {
+    "Faculty of Agriculture": [
+      "Department of Agricultural Economics",
+      "Department of Crop Production",
+      "Department of Soil Science",
+    ],
+    "Faculty of Arts": [
+      "Department of English",
+      "Department of History",
+      "Department of Linguistics",
+    ],
+    "Faculty of Basic Medical Sciences": [
+      "Department of Anatomy",
+      "Department of Physiology",
+      "Department of Medical Biochemistry",
+    ],
+    "Faculty of Clinical Sciences": [
+      "Department of Medicine",
+      "Department of Surgery",
+      "Department of Pediatrics",
+    ],
+    "Faculty of Communication and Information Sciences": [
+      "Department of Mass Communication",
+      "Department of Library and Information Science",
+      "Department of Telecommunication Science",
+      "Department of Information Technology",
+      "Department of Computer Science",
+    ],
+    "Faculty of Education": [
+      "Department of Educational Management",
+      "Department of Counseling Education",
+      "Department of Social Studies Education",
+    ],
+    "Faculty of Engineering and Technology": [
+      "Department of Agric and Biosystems Engineering",
+      "Deprtment of Biomedical Engineering",
+      "Department of Chemical Engineering",
+      "Department of Civil Engineering",
+      "Department of Computer Engineering",
+      "Department of Electrical & Elecctronics Engineering",
+      "Department of food Bioprocess Engineering",
+      "Department of Mechanical Engineering",
+      "Department of Water Resources and Environmental Enigneering",
+    ],
+    "Faculty of Environmental Sciences": [
+      "Department of Architecture",
+      "Department of Urban and Regional Planning",
+      "Department of Estate Management",
+      "Department of Quantity Surveying",
+      "Department of Surveying and Geoinformatics",
+    ],
+    "Faculty of Law": [
+      "Department of Private Law",
+      "Department of Public Law",
+      "Department of International Law",
+    ],
+    "Faculty of Life Sciences": [
+      "Department of Biochemistry",
+      "Department of Microbiology",
+      "Department of Optometry and Vision Science",
+      "Department of Plant Biology",
+      "Department of Zoology",
+    ],
+    "Faculty of Management Sciences": [
+      "Department of Accounting",
+      "Department of Business Administration",
+      "Department of Finance",
+      "Department of Marketing",
+      "Department of Industrial Relations & Personnel Management",
+      "Department of Public Administration",
+    ],
+    "Faculty of Pharmaceutical Sciences": [
+      "Department of Clinical Pharmacy and Pharmacy Practice",
+      "Department of Pharmacology & Toxicology",
+      "Department of Pharmaceutics & Pharmaceutical Microbology",
+      "Department of Pharmaceutical & Microbology & Biotechnology",
+      "Department of Pharmcognosy & Drug Develoment",
+      "Department of Pharmaceutical and Medicinal Chemistry",
+    ],
+    "Faculty of Physical Sciences": [
+      "Department of Physics",
+      "Department of Chemistry",
+      "Department of Geology",
+      "Department of Geo-Physics",
+      "Department of Industrial Chemistry",
+      "Department of Mathematics",
+      "Department of Statistics",
+    ],
+    "Faculty of Social Sciences": [
+      "Department of Economics",
+      "Department of Geography & Environmental Mgt.",
+      "Department of Sociology",
+      "Department of Psychology",
+      "Department of Political Science",
+    ],
+
+    "Faculty of Veterinary Medicine": [
+      "Department of Veterinary Anatomy",
+      "Department of Veterinary Physiology",
+      "Department of Veterinary Pathology",
+    ],
+  };
+
+  useEffect(() => {
+    const facultySelect = document.getElementById("facultySelect");
+    const departmentSelect = document.getElementById("departmentSelect");
+
+    // Populate faculty
+    for (const faculty in universityData) {
+      const option = document.createElement("option");
+      option.value = faculty;
+      option.textContent = faculty;
+      facultySelect.appendChild(option);
+    }
+
+    // Event listener for faculty selection
+    facultySelect.addEventListener("change", () => {
+      const selectedFaculty = facultySelect.value;
+
+      // Clear previous departments
+      departmentSelect.innerHTML =
+        '<option value="">--Select a Department--</option>';
+
+      if (selectedFaculty) {
+        // Enable department select
+        departmentSelect.disabled = false;
+
+        // Get departments for the selected faculty
+        const departments = universityData[selectedFaculty];
+
+        // Populate departments
+        departments.forEach((department) => {
+          const option = document.createElement("option");
+          option.value = department;
+          option.textContent = department;
+          departmentSelect.appendChild(option);
+        });
+      } else {
+        // Disable department select if no faculty is selected
+        departmentSelect.disabled = true;
+      }
+    });
+  }, []);
+
+  /***........................................... */
+  // Form input data
   const [formData, setFormData] = useState({
     fullName: "",
     matricNumber: "",
@@ -21,11 +165,13 @@ function StudentPortal() {
     photo: null,
   });
   const [file, setFile] = useState(null);
+  const [matricNumber, setMatricNumber] = useState();
   const [errors, setErrors] = useState({});
   const [progress, setProgress] = useState({ started: false, pc: 0 });
   const [msg, setMsg] = useState(null);
   const inputRef = useRef(null);
   const [image, setImage] = useState();
+
   const handleImageClick = () => {
     inputRef.current.click();
   };
@@ -51,89 +197,14 @@ function StudentPortal() {
         }
         setImage(file);
         setFormData({ ...formData, photo: file });
-
-        //checking if image uploaded has a red background
-        // Draw the uploaded image on a canvas
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const data = imageData.data;
-
-        let redCount = 0;
-        let totalCount = data.length / 4; // each pixel has 4 values (r, g, b, a)
-
-        for (let i = 0; i < data.length; i += 4) {
-          const r = data[i];
-          const g = data[i + 1];
-          const b = data[i + 2];
-
-          // Check if the pixel is predominantly red
-          if (r > 200 && g < 50 && b < 50) {
-            redCount++;
-          }
-        }
-
-        const redPercentage = (redCount / totalCount) * 100;
-        console.log("Red Percentage:", redPercentage);
-
-        const threshold = 70; // Define the threshold percentage for a red background
-        if (redPercentage > threshold) {
-          console.log("The image has a red background.");
-          setImage(file);
-          setFormData({ ...formData, photo: file });
-          setErrors((prevErrors) => ({ ...prevErrors, photo: null })); // Clear the error if valid
-        } else {
-          console.log("The image does not have a red background.");
-          setErrors((prevErrors) => ({
-            ...prevErrors,
-            photo: "The image does not have a red background.",
-          }));
-        }
       };
       img.src = e.target.result;
     };
     reader.readAsDataURL(file);
   };
+  /*.....................*/
 
-  //Responsive upload button
-  function handleUpload() {
-    if (!file) {
-      setMsg("No file selected");
-      return;
-    }
-    const fd = new FormData();
-    fd.append("file", file);
-
-    setMsg("Uploading...");
-    setProgress((prevState) => {
-      return { ...prevState, started: true };
-    });
-    axios
-      .post("http://httpbin.org/post", fd, {
-        onUploadedProgress: (progressEvent) => {
-          setProgress((prevState) => {
-            return { ...prevState, pc: progressEvent.progress * 100 };
-          });
-        },
-        headers: {
-          "Custom-Header": "value",
-        },
-      })
-      .then((res) => {
-        setMsg("Upload successful");
-        console.log(res.data);
-      })
-      .catch((err) => {
-        setMsg("Upload failed");
-        console.log(err);
-      });
-  }
-
-  //validation function
+  // form data validation
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -141,11 +212,17 @@ function StudentPortal() {
   const validate = () => {
     let newErrors = {};
     if (!formData.fullName) newErrors.fullName = "Full name is required";
-    if (!formData.matricNumber)
+    if (!formData.matricNumber) {
       newErrors.matricNumber = "Matric number is required";
-    if (!formData.fullName) newErrors.department = "Deprtment is required";
-    if (!formData.fullName) newErrors.faculty = "Faculty is required";
-    //Email validation
+    } else if (
+      !/^[0-9]{2}\/[0-9]{2}[a-zA-Z]{2}[0-9]{3}$/.test(formData.matricNumber)
+    ) {
+      newErrors.matricNumber =
+        "Invalid matric number format. Expected format: 20/52HL120";
+    }
+    if (!formData.department) newErrors.department = "Department is required";
+    if (!formData.faculty) newErrors.faculty = "Faculty is required";
+    // Email validation
     if (!formData.email) {
       newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -166,7 +243,6 @@ function StudentPortal() {
     if (!formData.photo) newErrors.photo = "Passport photo is required";
     return newErrors;
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const validationErrors = validate();
@@ -189,10 +265,6 @@ function StudentPortal() {
 
       {/* image upload  */}
       <div className="flex flex-col justify-center items-center mb-4 relative">
-        {/* <label className="text-red-500 mb-2 relative flex-col justify-center items-center top-3">
-          Please upload a passport photo with a red background
-        </label> */}
-
         <div
           onClick={handleImageClick}
           className="flex flex-col justify-center items-center"
@@ -203,7 +275,7 @@ function StudentPortal() {
             <img
               src={photo}
               alt="upload"
-              className="form_image w-auto lg:w-[500px] lg:h-[500px]"
+              className="form_image w-auto lg:w-[300px] lg:h-[300px]"
             />
           )}
           <input
@@ -213,7 +285,7 @@ function StudentPortal() {
             style={{ display: "none" }}
           />
         </div>
-        <button className="submit" onClick={handleUpload}>
+        <button className="submit mt-0" onClick={handleImageClick}>
           Upload
         </button>
         {progress.started && (
@@ -228,7 +300,7 @@ function StudentPortal() {
         {/*div for the firstname and lasname*/}
         <div className="input relative">
           <label htmlFor="fullName" className="">
-            Full name
+            Fullname
           </label>
           <input
             type="text"
@@ -257,32 +329,24 @@ function StudentPortal() {
           )}
         </div>
         {/*div for Department*/}
-
-        <div className="input relative">
-          <img src="" alt="" />
-          <label htmlFor="department">Department</label>
-          <input
-            type="text"
-            name="department"
-            value={formData.department}
-            onChange={handleChange}
-            placeholder="Department"
-          />
-          {errors.department && <p className="error">{errors.department}</p>}
+        {/* Div for Faculty */}
+        <div className=" relative">
+          <label htmlFor="facultySelect" className="label-select">
+            Faculty
+          </label>
+          <select id="facultySelect">
+            <option value="">Select a Faculty</option>
+          </select>
         </div>
-        {/*div for faculty*/}
-        <div className="input relative">
-          <img src="" alt="" />
-          <label htmlFor="faculty">Faculty</label>
-          <input
-            type="text"
-            name="faculty"
-            value={formData.faculty}
-            onChange={handleChange}
-            placeholder="Faculty"
-          />
 
-          {errors.faculty && <p className="error">{errors.faculty}</p>}
+        {/* Div for Department */}
+        <div className="relative">
+          <label htmlFor="departmentSelect" className="label-select">
+            Department
+          </label>
+          <select id="departmentSelect" disabled>
+            <option value="">Select a Department</option>
+          </select>
         </div>
 
         {/*div for email*/}
@@ -303,7 +367,7 @@ function StudentPortal() {
         {/*div for password*/}
         <div className="input relative">
           <img src="" alt="" />
-          <label htmlFor="fullName">Password</label>
+          <label htmlFor="password">Password</label>
           <input
             type="password"
             name="password"
@@ -344,7 +408,7 @@ function StudentPortal() {
             value={formData.level}
             onChange={handleChange}
           >
-            <option value="">Select level</option>
+            <option value="">Select Level</option>
             <option value="100">100</option>
             <option value="200">200</option>
             <option value="300">300</option>
@@ -354,21 +418,101 @@ function StudentPortal() {
         </div>
       </div>
 
-      <div className="forgot-password pl-4 md:pl-16  text-[#000080] text-xl md:text-2xl pb-24">
-        forgot password?{" "}
+      {/* <div className="forgot-password pl-4 md:pl-16  text-[#000080] text-xl md:text-2xl pb-24">
+        Forgot password?{" "}
         <span className="click-here text-[#000080] cursor-pointer">
           Click here
         </span>
-      </div>
+      </div> */}
       <div className="flex flex-col-2 justify-center gap-8 lg:mb-20">
         <div className="submit" onClick={handleSubmit}>
           {" "}
           Register
         </div>
-        <div className="submit">Login</div>
+        <Link to="/login">
+          <div className="submit">Login</div>
+        </Link>
       </div>
     </div>
   );
 }
 
 export default StudentPortal;
+// Responsive upload button
+// function handleUpload() {
+//   if (!file) {
+//     setMsg("No file selected");
+//     return;
+//   }
+//   const fd = new FormData();
+//   fd.append("file", file);
+
+//   setMsg("Uploading...");
+//   setProgress((prevState) => {
+//     return { ...prevState, started: true };
+//   });
+//   axios
+//     .post("http://httpbin.org/post", fd, {
+//       onUploadProgress: (progressEvent) => {
+//         setProgress((prevState) => {
+//           return {
+//             ...prevState,
+//             pc: (progressEvent.loaded / progressEvent.total) * 100,
+//           };
+//         });
+//       },
+//       headers: {
+//         "Custom-Header": "value",
+//       },
+//     })
+//     .then((res) => {
+//       setMsg("Upload successful");
+//       console.log(res.data);
+//     })
+//     .catch((err) => {
+//       setMsg("Upload failed");
+//       console.log(err);
+//     });
+// }
+
+//  // Checking if image uploaded has a red background
+//  const canvas = document.createElement("canvas");
+//  const ctx = canvas.getContext("2d");
+//  canvas.width = img.width;
+//  canvas.height = img.height;
+//  ctx.drawImage(img, 0, 0);
+
+//  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+//  const data = imageData.data;
+
+//  let redCount = 0;
+//  let totalCount = data.length / 4; // each pixel has 4 values (r, g, b, a)
+
+//  for (let i = 0; i < data.length; i += 4) {
+//    const r = data[i];
+//    const g = data[i + 1];
+//    const b = data[i + 2];
+
+//    // Check if the pixel is predominantly red
+//    if (r > 200 && g < 50 && b < 50) {
+//      redCount++;
+//    }
+//  }
+
+//  const redPercentage = (redCount / totalCount) * 100;
+//  console.log("Red Percentage:", redPercentage);
+
+//  const threshold = 70; // Define the threshold percentage for a red background
+//  if (redPercentage > threshold) {
+//    console.log("The image has a red background.");
+//    setImage(file);
+//    setFormData({ ...formData, photo: file });
+//    setErrors((prevErrors) => ({ ...prevErrors, photo: null })); // Clear the error if valid
+//  } else {
+//    console.log("The image does not have a red background.");
+//    setErrors((prevErrors) => ({
+//      ...prevErrors,
+//      photo: "The image does not have a red background.",
+//    }));
+//  }
+// };

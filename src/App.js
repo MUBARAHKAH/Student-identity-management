@@ -7,6 +7,8 @@ import StudentPortal from "./Components/StudentPortal/StudentPortal";
 import Login from "./Components/StudentPortal/login/Login.jsx";
 import Layout from "./Components/StudentPortal/StudentDashboard/Layout";
 import Dashboard from "./Components/StudentPortal/StudentDashboard/Dashboard.jsx";
+import Header from "./Components/StudentPortal/StudentDashboard/Header.jsx";
+import Sidebar from "./Components/StudentPortal/StudentDashboard/Sidebar.jsx";
 import Users from "./Components/StudentPortal/StudentDashboard/Users";
 import IdentityCards from "./Components/StudentPortal/StudentDashboard/IdentityCards";
 import RegistrationStatus from "./Components/StudentPortal/StudentDashboard/RegistrationStatus";
@@ -28,8 +30,18 @@ export default function App() {
         <Route path="*" element={<h2>Error 404 page not found</h2>} />
 
         {/* New Layout Routes */}
+        <Route
+          index
+          element={
+            <>
+              <Header />
+              <Sidebar />
+            </>
+          }
+        />
+
         <Route path="/" element={<Layout />}>
-          <Route index element={<Dashboard />} />
+          {/* Include Header and Sidebar here */}
 
           <Route path="users" element={<Users />}>
             <Route path="profile-overview" element={<ProfileOverview />} />

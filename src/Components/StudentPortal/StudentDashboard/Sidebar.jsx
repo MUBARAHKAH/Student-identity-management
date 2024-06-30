@@ -9,7 +9,7 @@ import {
   LayoutDashboard,
   UserCircle,
 } from "lucide-react";
-import logo from "../../Assets/unilorin_logo2.png";
+import logo from "../../Assets/sdm2_logo.png";
 import identityCardIcon from "../../Assets/id-card.png";
 import registrationIcon from "../../Assets/contact-form.png";
 import documentIcon from "../../Assets/manage.png";
@@ -29,125 +29,72 @@ export default function Sidebar() {
     <aside className="h-screen">
       <nav
         className={`h-full flex flex-col bg-white border-r shadow-sm transition-all duration-300 ${
-          expanded ? "w-96" : "w-20"
+          expanded ? "w-64" : "w-20"
         }`}
       >
         <div className="p-4 pb-2 flex justify-between items-center">
-          <img
-            src={logo}
-            alt="Unilorin Logo"
-            className={`overflow-hidden transition-all duration-300 ${
-              expanded ? "w-32" : "w-0"
-            }`}
-          />
+          {/* Adjusted placement to top-right corner */}
           <button
             onClick={handleToggle}
-            className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100"
+            className="p-1.5 rounded-lg bg-gray-50 hover:bg-gray-100 ml-auto"
           >
             {expanded ? <ChevronFirst /> : <ChevronLast />}
           </button>
         </div>
-
         <SidebarContext.Provider value={{ expanded, openItem, setOpenItem }}>
           <ul className="flex-1 px-3">
             <SidebarItem
-              icon={<LayoutDashboard size={50} />}
-              text="Student Dashboard"
-              alert
+              icon={<LayoutDashboard size={24} />}
+              text="Dashboard"
               to="/"
-              id="student-dashboard"
-            />
-            <SidebarItem
-              icon={<UserCircle size={20} />}
-              text="Users"
-              // subItems={["Profile Overview", "Edit Profile"]}
-              subItems={[
-                { name: "Profile Overview", path: "/users/profile-overview" },
-                { name: "Edit Profile", path: "/users/edit-profile" },
-              ]}
-              to="/users"
-              id="users"
+              id="dashboard"
             />
             <SidebarItem
               icon={
-                <img src={identityCardIcon} alt="Identity-Card" width={20} />
+                <img src={identityCardIcon} alt="Id Card" className="w-5" />
               }
-              text="Identity-cards"
-              // subItems={["View Id card", "Download Id card", "Qr code display"]}
-              subItems={[
-                { name: "View Id card", path: "/identity-cards/view-id-card" },
-                {
-                  name: "Download Id card",
-                  path: "/identity-cards/download-id-card",
-                },
-                {
-                  name: "Qr code display",
-                  path: "/identity-cards/qr-code-display",
-                },
-              ]}
-              to="/identity-cards"
-              id="identity-cards"
+              text="ID Card"
+              to="/id-card"
+              id="id-card"
+            />
+            <SidebarItem
+              icon={<UserCircle size={24} />}
+              text="Status"
+              to="/status"
+              id="status"
             />
             <SidebarItem
               icon={
                 <img
-                  src={registrationIcon}
-                  alt="registration-status"
-                  width={20}
+                  src={documentIcon}
+                  alt="Document Management"
+                  className="w-5"
                 />
               }
-              text="Registration Status"
-              subItems={["Registration progress", "Required actions"]}
-              to="/registration-status"
-              id="registration-status"
-            />
-            <SidebarItem
-              icon={
-                <img src={notificationIcon} alt="Identity Card" width={20} />
-              }
-              text="Notifications"
-              subItems={["Alerts", "Message Center"]}
-              to="/notifications"
-              id="notifications"
-            />
-            <SidebarItem
-              icon={<img src={documentIcon} alt="Identity Card" width={20} />}
-              text="Document Management"
-              subItems={["Upload documents", "View Uploaded Document"]}
-              to="/document-management"
-              id="document-management"
-            />
-            <SidebarItem
-              icon={<LifeBuoy size={20} />}
-              text="Help"
-              subItems={["FAQs", "Contact Support"]}
-              to="/help"
-              id="help"
+              text="Edit Profile"
+              to="/edit-profile"
+              id="edit-profile"
             />
           </ul>
         </SidebarContext.Provider>
-        <div className="border-t flex p-3">
-          <img src="#" alt="Profile" className="w-10 h-10 rounded-md" />
+        <div className="border-t flex p-3 items-center">
+          <img src="#" alt="Profile" className="w-10 h-10 rounded-full" />
           <div
-            className={`flex justify-between items-center transition-all duration-300 ${
-              expanded ? "w-96 ml-3" : "w-0"
+            className={`flex flex-col ml-3 transition-all duration-300 ${
+              expanded ? "block" : "hidden"
             }`}
           >
-            <div className="leading-4 overflow-hidden">
-              <h4 className="font-semibold">Abdulazeez Olayinka</h4>
-              <span className="text-xs text-gray-600">
-                abdulazeezolayinka1@gmail.com
-              </span>
-            </div>
-            <MoreVertical size={20} className="relative left-96" />
+            <h4 className="font-semibold">Hawkins Maru</h4>
+            <span className="text-xs text-gray-600">Company Manager</span>
           </div>
+          <MoreVertical size={20} className="ml-auto" />
         </div>
       </nav>
     </aside>
   );
 }
 
-export function SidebarItem({ icon, text, active, alert, subItems = [], id }) {
+function SidebarItem({ icon, text, to, id }) {
   const { expanded, openItem, setOpenItem } = useContext(SidebarContext);
   const isOpen = openItem === id;
 
@@ -159,57 +106,26 @@ export function SidebarItem({ icon, text, active, alert, subItems = [], id }) {
     <>
       <li
         onClick={handleClick}
-        className={`
-           flex items-center py-2 px-3 my-1
-          font-medium rounded-md cursor-pointer
-          transition-colors group
-          ${
-            active || isOpen
-              ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
-              : "hover:bg-indigo-50 text-gray-600"
-          }
-        `}
+        className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors ${
+          isOpen
+            ? "bg-[#000080] text-white"
+            : "hover:bg-indigo-50 text-gray-600"
+        }`}
       >
         <div className="icon-wrapper">{icon}</div>
         <div
-          className={`overflow-hidden transition-all duration-300 ${
-            expanded ? "w-96 ml-3" : "w-0"
+          className={`ml-3 transition-all duration-300 ${
+            expanded ? "block" : "hidden"
           }`}
         >
-          <div className="text-base sm:text-lg lg:text-lg font-medium mb-8">
-            {text}
-          </div>
+          {text}
         </div>
-        {alert && (
-          <div
-            className={`absolute right-2 w-2 h-2 rounded bg-indigo-400 ${
-              expanded ? "" : "top-2"
-            }`}
-          />
-        )}
         {!expanded && (
-          <div
-            className={`absolute left-full rounded-md px-2 py-1 ml-6 bg-indigo-100 text-indigo-800 text-sm
-            invisible opacity-20 -translate-x-3 transition-all group-hover:visible group-hover:opacity-100 
-            group-hover:translate-x-0`}
-          >
+          <div className="ml-3 text-sm bg-indigo-100 text-indigo-800 p-1 rounded absolute left-full transform -translate-x-3 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
             {text}
           </div>
         )}
       </li>
-      {isOpen && subItems.length > 0 && (
-        <ul className={`ml-6 ${expanded ? "block" : "hidden"}`}>
-          {subItems.map((subItem, index) => (
-            <li
-              key={index}
-              className="py-2 px-3 my-1 text-gray-600 hover:text-indigo-800 hover:bg-indigo-50 rounded-md cursor-pointer"
-            >
-              {/* {subItem} */}
-              <Link to={subItem.path}>{subItem.name}</Link>
-            </li>
-          ))}
-        </ul>
-      )}
     </>
   );
 }

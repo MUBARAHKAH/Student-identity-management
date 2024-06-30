@@ -2,51 +2,55 @@ import React from "react";
 import "./Login.css";
 import { FaUser, FaLock } from "react-icons/fa";
 
-// import email_icon from "../Assets/email.jpg";
-// import password_icon from "../Assets/password.png";
-
 function Login() {
   return (
     <div className="wrapper">
       <form action="">
-        <h1 className="font-bold">Login</h1>
-        <div className="input-box">
-          <input
-            type="text"
-            placeholder="Matric_No"
-            required
-            className="w-[100%] h-[150%] border-solid border-2 border-gray-600 bg-transparent outline-none
-            placeholder-[gray] rounded-3xl pt-[20px] pr-[45px] pb-[20px] pl-[20px]"
-          />
-          <FaUser className="icon absolute right-5 top-5" />
-        </div>
-        <div className="input-box">
-          <input
-            type="password"
-            placeholder="Password"
-            required
-            className="w-[100%] h-[150%] bg-transparent border-solid border-2 border-gray-600  outline-none  placeholder-[gray] 
-            rounded-3xl"
-          />
-          <FaLock className="icon absolute right-5 top-5" />
-        </div>
-        <div className="remember-forgot flex justify-between mt-10 mb-8 t text-[14.5px]">
-          {/* <label
-            htmlFor=""
-            className="flex flex-row right-52 gap text-[#fff] font-light text-base"
-          > */}
-          <div className="flex flex-row gap-0">
-            <input type="checkbox" className="accent-white w-4 h-4 " />
-            <p className="mr-8"> Remember me</p>
+        <h1 className="font-bold">Login Your Details!</h1>
+        <p className=" text-gray-500 text-center mt-2">
+          Welcome back! Please enter your Details!
+        </p>
+
+        <div className="grid gap-8 mt-8">
+          <div className="relative">
+            <label htmlFor="matric_no" className="block text-gray-700 mb-2">
+              Matric Number
+            </label>
+            <input
+              type="text"
+              name="matric_no"
+              placeholder="Enter your matric number"
+              className="w-full px-4 py-2 border rounded"
+            />
+            {/* <FaUser className="absolute right-5 top-1/2 transform -translate-y-1/2" /> */}
           </div>
-          {/* </label> */}
-          <a href="#" className="text-[#fff] no-underline hover:underline">
+
+          <div className="relative">
+            <label htmlFor="password" className="block text-gray-700 mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              placeholder="********"
+              className="w-full px-4 py-2 border rounded"
+            />
+            {/* <FaLock className="absolute right-5 top-1/2 transform -translate-y-1/2" /> */}
+          </div>
+        </div>
+
+        <div className="remember-forgot flex justify-between mt-10 mb-8 text-[14.5px]">
+          <div className="flex flex-row gap-2 items-center">
+            <input type="checkbox" className="accent-white w-4 h-4" />
+            <p>Remember for 30 days</p>
+          </div>
+          <a href="#" className="text-[#000080] no-underline hover:underline">
             Forgot password?
           </a>
         </div>
         <button
-          type="submits"
-          className="w-[100%] h-[60px] bg-[#000080] border-none outline-none rounded-3xl shadow-lg text-[#fff] font-bold text-2xl"
+          type="submit"
+          className="w-full h-14 bg-[#000080] border-none outline-none rounded-3xl shadow-lg text-[#fff] font-bold text-2xl"
         >
           Login
         </button>
@@ -63,4 +67,5 @@ function Login() {
     </div>
   );
 }
+
 export default Login;

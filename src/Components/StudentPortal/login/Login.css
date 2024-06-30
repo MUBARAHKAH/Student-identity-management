@@ -18,7 +18,7 @@ html {
 }
 
 .wrapper {
-  @apply m-auto mt-[250px] w-full lg:w-[800px] bg-[#fff] border-solid border-2 border-gray-500 text-[#000080] rounded-2xl px-11 py-14;
+  @apply m-auto mt-[250px] w-full lg:w-[800px] bg-[#fff] border-solid border-2 shadow-md  text-[#000080] rounded-2xl px-11 py-14;
 }
 
 h1 {

@@ -253,266 +253,204 @@ function StudentPortal() {
     }
   };
   return (
-    <div className="container">
-      <div className="header flex flex-col items-center gap-2.25 mt-7.5">
-        <img src={logo} className="logo sw-56 h-56" alt="" />
-        <div className="text text-[#000080] text-center sm:text-left text-base sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-8 my-6">
-          Registration Form
-        </div>
-      </div>
-
-      {/* The student form details */}
-
-      {/* image upload  */}
-      <div className="flex flex-col justify-center items-center mb-4 relative">
-        <div
-          onClick={handleImageClick}
-          className="flex flex-col justify-center items-center"
-        >
-          {image ? (
-            <img src={URL.createObjectURL(image)} alt="" className="" />
-          ) : (
-            <img
-              src={photo}
-              alt="upload"
-              className="form_image w-auto lg:w-[300px] lg:h-[300px]"
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-3xl">
+        <img src={logo} className="w-20 h-20 mx-auto mb-6" alt="Logo" />
+        <h1 className="text-2xl font-bold text-center mb-4 text-[#000080]">
+          Register Here
+        </h1>
+        <p className="text-center mb-8 text-gray-600">
+          Welcome back! Please enter your details.
+        </p>
+        <div className="flex flex-col items-center mb-4">
+          <div
+            onClick={handleImageClick}
+            className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center cursor-pointer"
+          >
+            {image ? (
+              <img
+                src={URL.createObjectURL(image)}
+                alt="Uploaded"
+                className="w-full h-full rounded-full"
+              />
+            ) : (
+              "."
+            )}
+            <input
+              type="file"
+              ref={inputRef}
+              onChange={handleImageChange}
+              style={{ display: "none" }}
             />
-          )}
-          <input
-            type="file"
-            ref={inputRef}
-            onChange={handleImageChange}
-            style={{ display: "none" }}
-          />
-        </div>
-        <button className="submit mt-0" onClick={handleImageClick}>
-          Upload
-        </button>
-        {progress.started && (
-          <progress max="100" value={progress.pc}></progress>
-        )}
-        {msg && <span>{msg}</span>}
-        {errors.photo && (
-          <p className="error lg:right-0 sm:right-0">{errors.photo}</p>
-        )}
-      </div>
-      <div className="inputs grid  sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4 my-8">
-        {/*div for the firstname and lasname*/}
-        <div className="input relative">
-          <label htmlFor="fullName" className="">
-            Fullname
-          </label>
-          <input
-            type="text"
-            name="fullName"
-            value={formData.fullName}
-            onChange={handleChange}
-            placeholder="Full name"
-            className="peer text-gray-900 font-semibold text-xl md:text-2xl"
-          />
-          {errors.fullName && <p className="error">{errors.fullName}</p>}
-        </div>
-
-        <div className="input relative">
-          <img src="{}" alt="" />
-          <label htmlFor="matric">Matric Number</label>
-          <input
-            type="text"
-            name="matricNumber"
-            value={formData.matricNumber}
-            onChange={handleChange}
-            placeholder="Matric number"
-          />
-
-          {errors.matricNumber && (
-            <p className="error">{errors.matricNumber}</p>
-          )}
-        </div>
-        {/*div for Department*/}
-        {/* Div for Faculty */}
-        <div className=" relative">
-          <label htmlFor="facultySelect" className="label-select">
-            Faculty
-          </label>
-          <select id="facultySelect">
-            <option value="">Select a Faculty</option>
-          </select>
-        </div>
-
-        {/* Div for Department */}
-        <div className="relative">
-          <label htmlFor="departmentSelect" className="label-select">
-            Department
-          </label>
-          <select id="departmentSelect" disabled>
-            <option value="">Select a Department</option>
-          </select>
-        </div>
-
-        {/*div for email*/}
-        <div className="input relative">
-          <img src="" alt="" />
-          <label htmlFor="fullName">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Email_id"
-          />
-
-          {errors.email && <p className="error">{errors.email}</p>}
-        </div>
-
-        {/*div for password*/}
-        <div className="input relative">
-          <img src="" alt="" />
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            placeholder="Password"
-          />
-
-          {errors.password && <p className="error">{errors.password}</p>}
-        </div>
-
-        <div className="input">
-          <label htmlFor="gender" className=" label-select">
-            Gender
-          </label>
-
-          <select
-            className="form-select"
-            aria-label="Select gender"
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
+          </div>
+          <button
+            className="bg-[#000080] text-white px-4 py-2 rounded mt-4"
+            onClick={handleImageClick}
           >
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-          {errors.gender && <p className="error">{errors.gender}</p>}
+            Upload Image
+          </button>
+          {progress.started && (
+            <progress max="100" value={progress.pc}></progress>
+          )}
+          {msg && <span>{msg}</span>}
+          {errors.photo && <p className="text-red-500">{errors.photo}</p>}
         </div>
-        <div className="input ">
-          <label htmlFor="level" className=" label-level">
-            Level
-          </label>
-          <select
-            className="form-select"
-            aria-label="Select gender"
-            name="level"
-            value={formData.level}
-            onChange={handleChange}
+        <form
+          className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-8"
+          onSubmit={handleSubmit}
+        >
+          <div className="">
+            <label htmlFor="fullName" className="block text-gray-700">
+              Fullname
+            </label>
+            <input
+              type="text"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
+              placeholder="Full name"
+              className="w-full px-4 py-2 border rounded"
+            />
+            {errors.fullName && (
+              <p className="text-red-500">{errors.fullName}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="matric" className="block text-gray-700">
+              Matric Number
+            </label>
+            <input
+              type="text"
+              name="matricNumber"
+              value={formData.matricNumber}
+              onChange={handleChange}
+              placeholder="Matric number"
+              className="w-full px-4 py-2 border rounded"
+            />
+            {errors.matricNumber && (
+              <p className="text-red-500">{errors.matricNumber}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="facultySelect" className="block text-gray-700">
+              Faculty
+            </label>
+            <select
+              id="facultySelect"
+              className="w-full px-4 py-2 border rounded"
+              name="faculty"
+              value={formData.faculty}
+              onChange={handleChange}
+            >
+              <option value="">--Select a Faculty--</option>
+            </select>
+            {errors.faculty && <p className="text-red-500">{errors.faculty}</p>}
+          </div>
+
+          <div>
+            <label htmlFor="departmentSelect" className="block text-gray-700">
+              Department
+            </label>
+            <select
+              id="departmentSelect"
+              className="w-full px-4 py-2 border rounded"
+              name="department"
+              value={formData.department}
+              onChange={handleChange}
+              disabled={!formData.faculty}
+            >
+              <option value="">--Select a Department--</option>
+            </select>
+            {errors.department && (
+              <p className="text-red-500">{errors.department}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="email" className="block text-gray-700">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Email"
+              className="w-full px-4 py-2 border rounded"
+            />
+            {errors.email && <p className="text-red-500">{errors.email}</p>}
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-gray-700">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="Password"
+              className="w-full px-4 py-2 border rounded"
+            />
+            {errors.password && (
+              <p className="text-red-500">{errors.password}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="gender" className="block text-gray-700">
+              Gender
+            </label>
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded"
+            >
+              <option value="">--Select a Gender--</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+            {errors.gender && <p className="text-red-500">{errors.gender}</p>}
+          </div>
+
+          <div>
+            <label htmlFor="level" className="block text-gray-700">
+              Level
+            </label>
+            <select
+              name="level"
+              value={formData.level}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded"
+            >
+              <option value="">--Select a Level--</option>
+              <option value="100">100</option>
+              <option value="200">200</option>
+              <option value="300">300</option>
+            </select>
+            {errors.level && <p className="text-red-500">{errors.level}</p>}
+          </div>
+
+          <button
+            className="bg-[#000080] text-white px-4 py-2 rounded col-span-2"
+            onClick={handleSubmit}
           >
-            <option value="">Select Level</option>
-            <option value="100">100</option>
-            <option value="200">200</option>
-            <option value="300">300</option>
-          </select>
-
-          {errors.level && <p className="error">{errors.level}</p>}
+            Submit
+          </button>
+        </form>
+        <div className="sign-up flex items-center justify-center mt-4">
+          Already have an account?
+          <Link to="/login" className="text-blue-800 px-1">
+            Sign in
+          </Link>
         </div>
-      </div>
-
-      {/* <div className="forgot-password pl-4 md:pl-16  text-[#000080] text-xl md:text-2xl pb-24">
-        Forgot password?{" "}
-        <span className="click-here text-[#000080] cursor-pointer">
-          Click here
-        </span>
-      </div> */}
-      <div className="flex flex-col-2 justify-center gap-8 lg:mb-20">
-        <div className="submit" onClick={handleSubmit}>
-          {" "}
-          Register
-        </div>
-        <Link to="/login">
-          <div className="submit">Login</div>
-        </Link>
       </div>
     </div>
   );
 }
 
 export default StudentPortal;
-// Responsive upload button
-// function handleUpload() {
-//   if (!file) {
-//     setMsg("No file selected");
-//     return;
-//   }
-//   const fd = new FormData();
-//   fd.append("file", file);
-
-//   setMsg("Uploading...");
-//   setProgress((prevState) => {
-//     return { ...prevState, started: true };
-//   });
-//   axios
-//     .post("http://httpbin.org/post", fd, {
-//       onUploadProgress: (progressEvent) => {
-//         setProgress((prevState) => {
-//           return {
-//             ...prevState,
-//             pc: (progressEvent.loaded / progressEvent.total) * 100,
-//           };
-//         });
-//       },
-//       headers: {
-//         "Custom-Header": "value",
-//       },
-//     })
-//     .then((res) => {
-//       setMsg("Upload successful");
-//       console.log(res.data);
-//     })
-//     .catch((err) => {
-//       setMsg("Upload failed");
-//       console.log(err);
-//     });
-// }
-
-//  // Checking if image uploaded has a red background
-//  const canvas = document.createElement("canvas");
-//  const ctx = canvas.getContext("2d");
-//  canvas.width = img.width;
-//  canvas.height = img.height;
-//  ctx.drawImage(img, 0, 0);
-
-//  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-//  const data = imageData.data;
-
-//  let redCount = 0;
-//  let totalCount = data.length / 4; // each pixel has 4 values (r, g, b, a)
-
-//  for (let i = 0; i < data.length; i += 4) {
-//    const r = data[i];
-//    const g = data[i + 1];
-//    const b = data[i + 2];
-
-//    // Check if the pixel is predominantly red
-//    if (r > 200 && g < 50 && b < 50) {
-//      redCount++;
-//    }
-//  }
-
-//  const redPercentage = (redCount / totalCount) * 100;
-//  console.log("Red Percentage:", redPercentage);
-
-//  const threshold = 70; // Define the threshold percentage for a red background
-//  if (redPercentage > threshold) {
-//    console.log("The image has a red background.");
-//    setImage(file);
-//    setFormData({ ...formData, photo: file });
-//    setErrors((prevErrors) => ({ ...prevErrors, photo: null })); // Clear the error if valid
-//  } else {
-//    console.log("The image does not have a red background.");
-//    setErrors((prevErrors) => ({
-//      ...prevErrors,
-//      photo: "The image does not have a red background.",
-//    }));
-//  }
-// };

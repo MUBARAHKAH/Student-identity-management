@@ -1,16 +1,29 @@
-// src/QrCodeDisplay.jsx
 import React from "react";
 import QRCode from "qrcode.react";
-import { idCardData } from "../../../data";
 
 const QrCodeDisplay = () => {
-  const idInfo = "Student matricNumber: 20/52Hl120"; // Use actual ID information here
+  const userData = {
+    name: "Ajeigbe Sarat",
+    matric: "20/52HL120",
+    department: "Information Technology",
+    faculty: "CIS",
+    level: 400,
+    email: "ajeigbe@gmail.com",
+    phoneNumber: "+2349031239818",
+  };
+
+  const dataString = JSON.stringify(userData);
 
   return (
-    <div className="qr-code-display">
-      <h1>QR Code Display</h1>
-      <QRCode value={idInfo} />
-    </div>
+    <QRCode
+      value={dataString}
+      size={200}
+      fgColor="#333333"
+      bgColor="#ffffff"
+      level="Q"
+      includeMargin={true}
+      renderAs="svg"
+    />
   );
 };
 

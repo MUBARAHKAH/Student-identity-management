@@ -1,5 +1,4 @@
-// src/data.js
-export const idCardData = {
+export const initialUserData = {
   name: "Ajeigbe Sarat",
   matric: "20/52HL120",
   department: "Information Technology",

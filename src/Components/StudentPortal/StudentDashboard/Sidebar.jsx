@@ -48,6 +48,7 @@ export default function Sidebar() {
               text="Dashboard"
               to="/"
               id="dashboard"
+              link="/dashboard"
             />
             <SidebarItem
               icon={
@@ -56,12 +57,14 @@ export default function Sidebar() {
               text="ID Card"
               to="/id-card"
               id="id-card"
+              link="/identity-cards"
             />
             <SidebarItem
               icon={<UserCircle size={24} />}
               text="Status"
               to="/status"
               id="status"
+              link="/registration-status"
             />
             <SidebarItem
               icon={
@@ -74,6 +77,7 @@ export default function Sidebar() {
               text="Edit Profile"
               to="/edit-profile"
               id="edit-profile"
+              link="/profile-overview"
             />
           </ul>
         </SidebarContext.Provider>
@@ -84,8 +88,8 @@ export default function Sidebar() {
               expanded ? "block" : "hidden"
             }`}
           >
-            <h4 className="font-semibold">Hawkins Maru</h4>
-            <span className="text-xs text-gray-600">Company Manager</span>
+            <h4 className="font-semibold">Unilorin</h4>
+            <span className="text-xs text-gray-600">ID Management</span>
           </div>
           <MoreVertical size={20} className="ml-auto" />
         </div>
@@ -94,7 +98,7 @@ export default function Sidebar() {
   );
 }
 
-function SidebarItem({ icon, text, to, id }) {
+function SidebarItem({ icon, text, to, id, link }) {
   const { expanded, openItem, setOpenItem } = useContext(SidebarContext);
   const isOpen = openItem === id;
 
@@ -104,28 +108,30 @@ function SidebarItem({ icon, text, to, id }) {
 
   return (
     <>
-      <li
-        onClick={handleClick}
-        className={`flex items-center py-2 px-3 my-1 font-medium rounded-md cursor-pointer transition-colors ${
-          isOpen
-            ? "bg-[#000080] text-white"
-            : "hover:bg-indigo-50 text-gray-600"
-        }`}
-      >
-        <div className="icon-wrapper">{icon}</div>
-        <div
-          className={`ml-3 transition-all duration-300 ${
-            expanded ? "block" : "hidden"
+      <a href={link}>
+        <li
+          onClick={handleClick}
+          className={`flex items-center py-5 px-3 my-2 font-medium rounded-md cursor-pointer transition-colors ${
+            isOpen
+              ? "bg-[#000080] text-white"
+              : "hover:bg-indigo-50 text-gray-600"
           }`}
         >
-          {text}
-        </div>
-        {!expanded && (
-          <div className="ml-3 text-sm bg-indigo-100 text-indigo-800 p-1 rounded absolute left-full transform -translate-x-3 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+          <div className="icon-wrapper">{icon}</div>
+          <div
+            className={`ml-3 transition-all duration-300 ${
+              expanded ? "block" : "hidden"
+            }`}
+          >
             {text}
           </div>
-        )}
-      </li>
+          {!expanded && (
+            <div className="ml-3 text-sm bg-indigo-100 text-indigo-800 p-1 rounded absolute left-full transform -translate-x-3 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+              {text}
+            </div>
+          )}
+        </li>
+      </a>
     </>
   );
 }

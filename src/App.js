@@ -35,6 +35,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <Header />
       <Routes>
         <Route path="/StudentPortal" element={<StudentPortal />} />
         <Route path="/Login" element={<Login />} />
@@ -45,7 +46,6 @@ export default function App() {
           index
           element={
             <>
-              <Header />
               <Sidebar />
             </>
           }
@@ -57,6 +57,7 @@ export default function App() {
           <Route path="/dashboard" element={<Dashboard />}></Route>
 
           <Route path="/identity-cards" element={<IdentityCards />}>
+            {/* <Route path="/" element={<QrCodeDisplay />} /> */}
             <Route path="qr-code-display" element={<QrCodeDisplay />} />
           </Route>
 

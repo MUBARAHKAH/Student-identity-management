@@ -26,7 +26,7 @@ const ProfileOverview = ({ userData }) => {
   // }
 
   return (
-    <div className=" w-1/3 p-8  bg-white shadow-lg">
+    <div className=" w-1/4 p-8  bg-white shadow-lg">
       <div className="text-center mb-8 ">
         <img
           src={user.profilePicture || "https://via.placeholder.com/150"}

@@ -30,7 +30,7 @@ const IdentityCards = () => {
         </div>
       </div>
 
-      <div className="relative w-[170%] ml-32 right-3/4 -top-20">
+      <div className="relative w-[170%] ml-32 right-3/4 -top-20 py-20">
         <IdCardDetails />
       </div>
     </div>
